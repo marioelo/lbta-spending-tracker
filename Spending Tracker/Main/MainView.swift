@@ -11,18 +11,27 @@ struct MainView: View {
     
     @State private var shouldPresentAddCardForm = false
     
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        animation: .default)
+    private var cards: FetchedResults<Card>
+    
     var body: some View {
         NavigationView {
             ScrollView {
-                TabView {
-                    ForEach(0..<5) { index in
-                        CreditCardView()
-                            .padding(.bottom, 50)
+                if !cards.isEmpty {
+                    TabView {
+                        ForEach(cards) { card in
+                            CreditCardView()
+                                .padding(.bottom, 50)
+                        }
                     }
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                    .frame(height: 260)
+                    .indexViewStyle(.page(backgroundDisplayMode: .always))
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-                .frame(height: 260)
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
                 
                 Spacer()
                     .fullScreenCover(isPresented: $shouldPresentAddCardForm) {
@@ -30,7 +39,12 @@ struct MainView: View {
                     }
             }
             .navigationTitle("Credit Cards")
-            .navigationBarItems(trailing: addCardButton)
+            .navigationBarItems(
+                leading: HStack {
+                    addItemButton
+                    deleteAllButton
+                },
+                trailing: addCardButton)
         }
     }
     
@@ -83,10 +97,48 @@ struct MainView: View {
                 .cornerRadius(5)
         })
     }
+    
+    var addItemButton: some View {
+        Button(action: {
+            withAnimation {
+                let card = Card(context: viewContext)
+                card.timestamp = Date()
+
+                do {
+                    try viewContext.save()
+                } catch {
+                    
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
+            }
+        }, label: {
+            Text("Add Item")
+        })
+    }
+    
+    var deleteAllButton: some View {
+        Button(action: {
+            withAnimation {
+                cards.forEach { viewContext.delete($0) }
+
+                do {
+                    try viewContext.save()
+                } catch {
+                    
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
+            }
+        }, label: {
+            Text("Delete All")
+        })
+    }
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        let viewContext = PersistenceController.shared.container.viewContext
+        MainView().environment(\.managedObjectContext, viewContext)
     }
 }
