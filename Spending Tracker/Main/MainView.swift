@@ -24,7 +24,7 @@ struct MainView: View {
                 if !cards.isEmpty {
                     TabView {
                         ForEach(cards) { card in
-                            CreditCardView()
+                            CreditCardView(card: card)
                                 .padding(.bottom, 50)
                         }
                     }
@@ -49,9 +49,22 @@ struct MainView: View {
     }
     
     struct CreditCardView: View {
+        
+        let card: Card
+        
+        var cardColor: Color {
+            guard
+                let colorData = card.color,
+                let uiColor = UIColor.color(data: colorData)
+            else {
+                return .cyan
+            }
+            return Color(uiColor: uiColor)
+        }
+        
         var body: some View {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Apple Blue Visa Card")
+                Text(card.name ?? "")
                     .font(.system(size: 24, weight: .semibold))
                 
                 HStack {
@@ -64,15 +77,15 @@ struct MainView: View {
                         .font(.system(size: 18, weight: .semibold))
                 }
                 
-                Text("1234 1234 1234 1234")
+                Text(card.number ?? "")
                 
-                Text("Credit Limit: $50.000")
+                Text("Credit Limit: $\(card.limit)")
                 
             }
             .foregroundColor(.white)
             .padding()
             .background(
-                LinearGradient(colors: [Color.blue.opacity(0.6), Color.blue], startPoint: .center, endPoint: .bottom)
+                LinearGradient(colors: [cardColor.opacity(0.6), cardColor], startPoint: .center, endPoint: .bottom)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
@@ -125,7 +138,6 @@ struct MainView: View {
                 do {
                     try viewContext.save()
                 } catch {
-                    
                     let nsError = error as NSError
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
