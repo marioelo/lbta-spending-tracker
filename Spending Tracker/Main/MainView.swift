@@ -31,6 +31,8 @@ struct MainView: View {
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
                     .frame(height: 260)
                     .indexViewStyle(.page(backgroundDisplayMode: .always))
+                } else {
+                    emptyPromtView
                 }
                 
                 Spacer()
@@ -48,9 +50,42 @@ struct MainView: View {
         }
     }
     
+    private var emptyPromtView: some View {
+        VStack {
+            Text("You currently have no Cards in the system")
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 48)
+                .padding(.vertical)
+                
+            Button {
+                shouldPresentAddCardForm.toggle()
+            } label: {
+                Text("+ Add your first card")
+                    .foregroundColor(Color(.systemBackground))
+            }
+            .padding(.init(top: 10, leading: 14, bottom: 10, trailing: 14))
+            .background(Color(.label))
+            .cornerRadius(5)
+            
+        }.font(.system(size: 24, weight: .semibold))
+    }
+    
     struct CreditCardView: View {
         
         let card: Card
+        
+        @State private var shouldShowDialog = false
+        
+        private func handleDelete() {
+            let viewContext = PersistenceController.shared.container.viewContext
+            viewContext.delete(card)
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
         
         var cardColor: Color {
             guard
@@ -64,8 +99,27 @@ struct MainView: View {
         
         var body: some View {
             VStack(alignment: .leading, spacing: 12) {
-                Text(card.name ?? "")
-                    .font(.system(size: 24, weight: .semibold))
+                HStack {
+                    Text(card.name ?? "")
+                        .font(.system(size: 24, weight: .semibold))
+                    
+                    Spacer()
+                    
+                    Button {
+                        shouldShowDialog.toggle()
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .font(.system(size: 24,weight: .bold))
+                    }
+                    .actionSheet(isPresented: $shouldShowDialog) {
+                        .init(title: Text(card.name ?? ""), message: Text("Options"), buttons: [
+                            .destructive(Text("Delete"), action: handleDelete),
+                            .cancel()
+                        ])
+                    }
+
+                }
+                
                 
                 HStack {
                     Image("visa")
