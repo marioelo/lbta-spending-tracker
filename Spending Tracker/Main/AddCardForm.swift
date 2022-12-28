@@ -8,6 +8,28 @@
 import SwiftUI
 
 struct AddCardForm: View {
+    
+    let card: Card?
+    
+    init(card editingCard: Card? = nil) {
+        self.card = editingCard
+        
+        _cardName = State(initialValue: card?.name ?? "")
+        _cardNumber = State(initialValue: card?.number ?? "")
+        _cardType = State(initialValue: card?.type ?? "")
+        _expirationMonth = State(initialValue: Int(card?.expMonth ?? 1))
+        _expirationYear = State(initialValue: Int(card?.expYear ?? Int16(currentYear)))
+        
+        if let limit = card?.limit {
+            _creditLimit = State(initialValue: String(limit))
+        }
+        
+        if let data = card?.color, let uiColor = UIColor.color(data: data) {
+            let color = Color(uiColor: uiColor)
+            _color = State(initialValue: color)
+        }
+    }
+    
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -56,7 +78,7 @@ struct AddCardForm: View {
                 }
                 
             }
-                .navigationTitle("Add Credit Card")
+            .navigationTitle("\(card == nil ? "Add" : "Edit") Credit Card")
                 .navigationBarItems(
                     leading: cancelButton,
                     trailing: saveButton)
@@ -65,10 +87,11 @@ struct AddCardForm: View {
 
     private var saveButton: some View {
         Button(action: {
-            let card = Card(context: viewContext)
+            let card = card ?? Card(context: viewContext)
             card.name = cardName
             card.number = cardNumber
             card.limit = Int32(creditLimit) ?? 0
+            card.type = cardType
             card.expMonth = Int16(expirationMonth)
             card.expYear = Int16(expirationYear)
             card.timestamp = Date()
