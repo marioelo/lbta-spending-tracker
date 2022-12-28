@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BA0C006828E0E88D0027FF4A /* AddCardForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0C006728E0E88D0027FF4A /* AddCardForm.swift */; };
+		BA32845F295CE42D00A737A1 /* AdTransactionForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA32845E295CE42D00A737A1 /* AdTransactionForm.swift */; };
 		BA81D4912896D90C00168BC6 /* Spending_TrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81D4902896D90C00168BC6 /* Spending_TrackerApp.swift */; };
 		BA81D4932896D90C00168BC6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81D4922896D90C00168BC6 /* ContentView.swift */; };
 		BA81D4952896D91000168BC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA81D4942896D91000168BC6 /* Assets.xcassets */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		BA0C006728E0E88D0027FF4A /* AddCardForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCardForm.swift; sourceTree = "<group>"; };
+		BA32845E295CE42D00A737A1 /* AdTransactionForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdTransactionForm.swift; sourceTree = "<group>"; };
 		BA81D48D2896D90C00168BC6 /* Spending Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spending Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA81D4902896D90C00168BC6 /* Spending_TrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spending_TrackerApp.swift; sourceTree = "<group>"; };
 		BA81D4922896D90C00168BC6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -40,6 +42,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA32845C295CE41100A737A1 /* Transaction */ = {
+			isa = PBXGroup;
+			children = (
+				BA32845E295CE42D00A737A1 /* AdTransactionForm.swift */,
+			);
+			path = Transaction;
+			sourceTree = "<group>";
+		};
+		BA32845D295CE41E00A737A1 /* Card */ = {
+			isa = PBXGroup;
+			children = (
+				BA0C006728E0E88D0027FF4A /* AddCardForm.swift */,
+			);
+			path = Card;
+			sourceTree = "<group>";
+		};
 		BA81D4842896D90C00168BC6 = {
 			isa = PBXGroup;
 			children = (
@@ -81,8 +99,9 @@
 		BA81D4A32896D9AA00168BC6 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				BA32845D295CE41E00A737A1 /* Card */,
+				BA32845C295CE41100A737A1 /* Transaction */,
 				BA81D4A42896D9BB00168BC6 /* MainView.swift */,
-				BA0C006728E0E88D0027FF4A /* AddCardForm.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -163,6 +182,7 @@
 				BA81D4932896D90C00168BC6 /* ContentView.swift in Sources */,
 				BA81D4A52896D9BB00168BC6 /* MainView.swift in Sources */,
 				BA81D4912896D90C00168BC6 /* Spending_TrackerApp.swift in Sources */,
+				BA32845F295CE42D00A737A1 /* AdTransactionForm.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
